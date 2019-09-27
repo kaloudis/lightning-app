@@ -37,6 +37,9 @@ class PinView extends React.Component {
 
   render() {
     const { store, auth } = this.props;
+    const unlockText = this.props.auth.checkFingerprintHardwareAndEnrollment()
+      ? 'Unlock with your pin or fingerprint'
+      : 'Unlock with your pin';
     return (
       <Background image="purple-gradient-bg">
         <MainContent style={styles.content}>
@@ -47,7 +50,7 @@ class PinView extends React.Component {
             <LightningWord height={31.2} width={245.7} />
           </View>
           <FormStretcher>
-            <Text>Unlock with your pin</Text>
+            <Text>{unlockText}</Text>
             <PinBubbles pin={store.auth.pin} style={styles.bubbles} />
           </FormStretcher>
           <PinKeyboard
