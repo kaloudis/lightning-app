@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { NativeModules, View, StyleSheet } from 'react-native';
 import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
 import Background from '../component/background';
@@ -37,9 +37,12 @@ class PinView extends React.Component {
 
   render() {
     const { store, auth } = this.props;
-    const unlockText = this.props.auth.checkFingerprintHardwareAndEnrollment()
-      ? 'Unlock with your pin or fingerprint'
-      : 'Unlock with your pin';
+    const FingerprintDialog = NativeModules.FingerprintDialog;
+    const hasActiveFingerprint = this.props.auth.checkFingerprintHardwareAndEnrollment();
+
+    if (hasActiveFingerprint) {
+      FingerprintDialog.getBiometricPrompt();
+    }
     return (
       <Background image="purple-gradient-bg">
         <MainContent style={styles.content}>
@@ -50,7 +53,7 @@ class PinView extends React.Component {
             <LightningWord height={31.2} width={245.7} />
           </View>
           <FormStretcher>
-            <Text>{unlockText}</Text>
+            <Text>Unlock with your pin</Text>
             <PinBubbles pin={store.auth.pin} style={styles.bubbles} />
           </FormStretcher>
           <PinKeyboard
